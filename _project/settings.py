@@ -29,7 +29,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # internal
     "_apps.account",
+    "_apps.vendor",
 ]
 
 MIDDLEWARE = [
@@ -136,16 +138,26 @@ LOGGING = {
     # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
     "handlers": {
         "file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
             "level": "WARNING",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "debug_logs/warning.log",
+            # "class": "logging.FileHandler",
+            "filename": BASE_DIR / "debug_logs/dailylog.log",
             "formatter": "default",
+            "when": "d",
+            "interval": 1,
+            "backupCount": 30,
+            "encoding": "utf8",
         },
         "file_info": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
             "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "debug_logs/info.log",
+            # "class": "logging.FileHandler",
+            "filename": BASE_DIR / "debug_logs/dailylog.log",
             "formatter": "default",
+            "when": "d",
+            "interval": 1,
+            "backupCount": 30,
+            "encoding": "utf8",
         },
         "console": {
             "class": "logging.StreamHandler",
@@ -156,7 +168,8 @@ LOGGING = {
     "formatters": {
         "default": {
             # exact format is not important, this is the minimum information
-            "format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
+            # "format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
+            "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s"
         },
         "django.server": DEFAULT_LOGGING["formatters"]["django.server"],
     },

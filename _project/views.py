@@ -2,9 +2,13 @@ import logging
 from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
-logger_info = logging.getLogger("app")
+logapp = logging.getLogger("app")
 
 
 def home(request):
-    logger_info.info("Homepage was accessed")
+    logapp.debug("This is a debug message")
+    logapp.info("This is an info message")
+    logapp.warning("This is a warning message")
+    logapp.error("This is an error message")
+    logapp.critical("This is a critical message")
     return render(request, "home.html")
