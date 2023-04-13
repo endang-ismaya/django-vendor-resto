@@ -1,0 +1,6 @@
+- rule:
+    name: C021
+    message: Inline styles should be avoided.
+    flags: re.I
+    patterns:
+      - <\w+\s(?:[^>]*\s)?style=(?=['|\"](?!>|background).*>)
