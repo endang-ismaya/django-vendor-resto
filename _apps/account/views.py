@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 
 from _apps.account.forms import UserRegistrationForm
 from _apps.account.models import User
@@ -29,6 +30,8 @@ def register(request):
             )
             user.phone_number = phone_number
             user.save()
+
+            messages.success(request, "Your account has been registered successfully!")
             return redirect(reverse("home"))
         else:
             context = {"form": form}

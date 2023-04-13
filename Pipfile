@@ -12,6 +12,7 @@ psycopg2 = "*"
 [dev-packages]
 black = "*"
 flake8 = "*"
+djlint = "*"
 
 [requires]
 python_version = "3.11"
