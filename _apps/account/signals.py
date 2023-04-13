@@ -44,3 +44,6 @@ def pre_save_profile_receiver(sender, instance, **kwargs):
         logapp.info(
             f"pre_save receiver: {instance.email}'s username was not provided during creation"
         )
+
+    if not instance.role:
+        instance.role = User.CUSTOMER
