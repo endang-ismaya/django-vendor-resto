@@ -1,5 +1,11 @@
+import logging
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+logapp = logging.getLogger("app")
 
 
 class UserManager(BaseUserManager):
@@ -110,4 +116,34 @@ class UserProfile(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return self.user.email
+        if self.user.email:
+            return self.user.email
+
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def post_save_create_profile_receiver(sender, instance, created, **kwargs):
+    if created:
+        logapp.info(f"create the user profile for {instance.email}")
+        UserProfile.objects.create(user=instance)
+
+        # check if email is empty
+        if not instance.email:
+            instance.email = instance.username
+            instance.save()
+
+        if not instance.username:
+            instance.username = instance.email
+            instance.save()
+
+    else:
+        try:
+            profile = UserProfile.objects.get(user=instance)
+            profile.save()
+            logapp.info(f"{instance.email} has updated his profile")
+        except UserProfile.DoesNotExist:
+            logapp.info(
+                f"Profile was not exists, create the user profile for {instance.email}"
+            )
+            UserProfile.objects.create(user=instance)

@@ -132,3 +132,4 @@ dmypy.json
 .vscode/
 mynotes.txt
 course_resources/
+debug_logs/
