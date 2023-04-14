@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 
 from _apps.account.forms import UserRegistrationForm
 from _apps.account.models import User, UserProfile
-from _apps.account.utils import detect_user
+from _apps.account.utils import detect_user, send_verification_email
 from _apps.vendor.forms import VendorRegistrationForm
 
 logapp = logging.getLogger("app")
@@ -58,6 +58,8 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
+            # send email verification
+            send_verification_email(request, user)
             messages.success(request, "Your account has been registered successfully!")
             return redirect(reverse("home"))
         else:
@@ -103,6 +105,8 @@ def register_vendor(request):
             vendor.user_profile = user_profile
             vendor.save()
 
+            # send email verification
+            send_verification_email(request, user)
             messages.success(
                 request,
                 "Your account has been registered successfully!, please wait for the approval",
@@ -161,3 +165,8 @@ def vendor_dashboard(request):
 def my_account(request):
     redirect_url = detect_user(request.user)
     return redirect(reverse(redirect_url))
+
+
+def activate(request, uidb64, token):
+    # TODO activate the user by setting the is_active status to True
+    pass

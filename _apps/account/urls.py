@@ -17,4 +17,5 @@ urlpatterns = [
         name="accounts_vendor_dashboard",
     ),
     path("my-account/", views.my_account, name="accounts_myaccount"),
+    path("activate/<uidb64>/<token>/", views.activate, name="accounts_activate"),
 ]
