@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+<!-- load static-->
+{% load static %}
+<!-- content start -->
+{% block content %}
+  <!-- Main Section Start -->
+  <div class="main-section">
+    <div class="page-section nopadding cs-nomargin" style="margin-top: 0px; padding-top: 60px; padding-bottom: 60px; margin-bottom: 0px">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <!-- show form errors end-->
+            <div class="user-dashboard loader-holder" style="width: 450px; min-height: auto;">
+              <div class="user-holder">
+                <!-- djlint:off -->
+                <h4 class="text-center" style="margin-bottom: 0">SIGN IN</h4><!-- djlint:on -->
+                <p class="text-center">Order food from your favorite Restaurant.</p>
+                <hr />
+                <div id="restaurant-sets-holder">
+                  <form class="form-fields-set foodbakery-dev-restaurant-form" method="post" action="{% url 'accounts_login' %}">
+                    {% csrf_token %}
+                    <ul class="register-add-restaurant-tab-container restaurant-information-tab-container">
+                      <li>
+                        <div class="row">
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="field-holder">
+                                  <label>Email</label>
+                                  <input type="email" name="email" placeholder="Enter your email address">
+                                </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="field-holder">
+                                  <label>Password</label>
+                                  <input type="password" name="password" placeholder="Enter your password">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <!-- show form errors start-->
+                        <ul class="errorlist">
+                          {% for field in form %}
+                            <!---->
+                            <!---->
+                            {% if field.errors %}
+                              <!-------->
+                              {% for error in field.errors %}
+                                <!-- djlint:off -->
+                                <li style="color: red">{{ error }}</li><!-- djlint:on -->
+                                <!-------->
+                              {% endfor %}
+                              <!---->
+                            {% endif %}
+                            <!---->
+                          {% endfor %}
+                          <!-- non field -->
+                          <!-- djlint:off -->
+                          <li style="color: red">{{ form.non_field_errors }}</li><!-- djlint:on -->
+                        </ul>
+                        <div class="row">
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="field-holder">
+                              <div class="payment-holder">
+                                <input type="submit" value="Login" id="btn-next-restaurant-information" class="bgcolor" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Main Section End -->
+  <!-- content end -->
+{% endblock content %}

@@ -3,6 +3,7 @@ import logging
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib import auth
 
 from _apps.account.forms import UserRegistrationForm
 from _apps.account.models import User, UserProfile
@@ -67,7 +68,7 @@ def register_vendor(request):
                 password=password,
             )
             user.phone_number = phone_number
-            user.role = User.RESTAURANT
+            user.role = User.VENDOR
             user.save()
 
             # vendor
@@ -90,3 +91,30 @@ def register_vendor(request):
 
     context = {"form": form, "vendor_form": vendor_form}
     return render(request, "account/register-vendor.html", context)
+
+
+def login(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+        user = auth.authenticate(request, email=email, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, "You have been logged in.")
+            return redirect("accounts_dashboard")
+        else:
+            messages.warning(request, "Error logging In - Please try it again.")
+            return redirect("accounts_login")
+
+    return render(request, "account/login.html")
+
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, "You have been logged out.")
+    return redirect("accounts_login")
+
+
+def dashboard(request):
+    return render(request, "account/dashboard.html")
