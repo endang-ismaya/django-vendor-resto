@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+<!-- load static-->
+{% load static %}
+<!-- content start -->
+{% block content %}
+  <!-- Main Section Start -->
+  <h2>Vendor Dashboard</h2>
+  <p>Hi {{ user.first_name }}</p>
+  <p>{{ user.get_role }}</p>
+  <!-- Main Section End -->
+  <!-- content end -->
+{% endblock content %}

@@ -6,5 +6,15 @@ urlpatterns = [
     path("register-vendor/", views.register_vendor, name="accounts_register_vendor"),
     path("login/", views.login, name="accounts_login"),
     path("logout/", views.logout, name="accounts_logout"),
-    path("dashboard/", views.dashboard, name="accounts_dashboard"),
+    path(
+        "customer-dashboard/",
+        views.customer_dashboard,
+        name="accounts_customer_dashboard",
+    ),
+    path(
+        "vendor-dashboard/",
+        views.vendor_dashboard,
+        name="accounts_vendor_dashboard",
+    ),
+    path("my-account/", views.my_account, name="accounts_myaccount"),
 ]

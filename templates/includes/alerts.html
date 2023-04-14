@@ -1,9 +1,9 @@
 {% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} show-notification" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      {% comment %} <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">x</span>
-      </button>
+      </button> {% endcomment %}
       {{ message }}
     </div>
   {% endfor %}

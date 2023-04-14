@@ -10,7 +10,7 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls, name="admin"),
     path("", views.home, name="home"),
     path("accounts/", include("_apps.account.urls")),
 ]

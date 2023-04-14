@@ -4,16 +4,37 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
 
 from _apps.account.forms import UserRegistrationForm
 from _apps.account.models import User, UserProfile
+from _apps.account.utils import detect_user
 from _apps.vendor.forms import VendorRegistrationForm
 
 logapp = logging.getLogger("app")
 
 
-# Create your views here.
+# custom decorator restrict the vendor from accessing customer page vice versa
+def check_role_vendor(user):
+    if user.role == 1:
+        return True
+
+    raise PermissionDenied("Not Authorized to access the page!")
+
+
+def check_role_customer(user):
+    if user.role == 2:
+        return True
+
+    raise PermissionDenied("Not Authorized to access the page!")
+
+
 def register(request):
+    if request.user.is_authenticated:
+        messages.info(request, "You've been registered, no need to register anymore!")
+        return redirect(reverse("accounts_myaccount"))
+
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
 
@@ -50,6 +71,10 @@ def register(request):
 
 
 def register_vendor(request):
+    if request.user.is_authenticated:
+        messages.info(request, "You've been registered, no need to register anymore!")
+        return redirect(reverse("accounts_myaccount"))
+
     if request.method == "POST":
         # store the data and create the user
         form = UserRegistrationForm(request.POST)
@@ -94,6 +119,10 @@ def register_vendor(request):
 
 
 def login(request):
+    if request.user.is_authenticated:
+        messages.info(request, "You are logged in, no need to login anymore!")
+        return redirect(reverse("accounts_myaccount"))
+
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
@@ -102,9 +131,9 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, "You have been logged in.")
-            return redirect("accounts_dashboard")
+            return redirect("accounts_myaccount")
         else:
-            messages.warning(request, "Error logging In - Please try it again.")
+            messages.error(request, "Error logging In - Please try it again.")
             return redirect("accounts_login")
 
     return render(request, "account/login.html")
@@ -116,5 +145,19 @@ def logout(request):
     return redirect("accounts_login")
 
 
-def dashboard(request):
-    return render(request, "account/dashboard.html")
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_customer)
+def customer_dashboard(request):
+    return render(request, "account/customer-dashboard.html")
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def vendor_dashboard(request):
+    return render(request, "account/vendor-dashboard.html")
+
+
+@login_required(login_url="accounts_login")
+def my_account(request):
+    redirect_url = detect_user(request.user)
+    return redirect(reverse(redirect_url))
