@@ -11,7 +11,11 @@ from django.contrib.auth.tokens import default_token_generator
 
 from _apps.account.forms import UserRegistrationForm
 from _apps.account.models import User, UserProfile
-from _apps.account.utils import detect_user, send_verification_email
+from _apps.account.utils import (
+    detect_user,
+    send_password_reset_email,
+    send_verification_email,
+)
 from _apps.vendor.forms import VendorRegistrationForm
 
 logapp = logging.getLogger("app")
@@ -188,3 +192,59 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, "Invalid user or activation link")
         return redirect("accounts_login")
+
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            # send reset password email
+            send_password_reset_email(request, user)
+            messages.info(request, "Password reset link has been sent to your mail.")
+            return redirect("accounts_login")
+        else:
+            messages.error(request, "Email not exists or not registered.")
+            return redirect("accounts_forgot_password")
+
+    return render(request, "account/forgot-password.html")
+
+
+def reset_password_validate(request, uidb64, token):
+    # validate the user by decoding the token
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session["uid"] = uid
+        messages.info(request, "Please reset your password")
+        return redirect("accounts_reset_password")
+    else:
+        messages.error(request, "Invalid reset link")
+        return redirect("accounts_login")
+
+
+def reset_password(request):
+    if request.method == "POST":
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
+
+        if password == confirm_password:
+            pk = request.session.get("uid")
+            user = User.objects.get(pk=pk)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request, "Password reset done.")
+            return redirect("accounts_login")
+        else:
+            messages.error(request, "Password mismatch!")
+            return redirect("accounts_reset_password")
+
+    return render(request, "account/reset-password.html")

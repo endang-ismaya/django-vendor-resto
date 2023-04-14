@@ -18,4 +18,11 @@ urlpatterns = [
     ),
     path("my-account/", views.my_account, name="accounts_myaccount"),
     path("activate/<uidb64>/<token>/", views.activate, name="accounts_activate"),
+    path("forgot-password/", views.forgot_password, name="accounts_forgot_password"),
+    path(
+        "reset-password-validate/<uidb64>/<token>/",
+        views.reset_password_validate,
+        name="accounts_reset_password_validate",
+    ),
+    path("reset-password/", views.reset_password, name="accounts_reset_password"),
 ]
