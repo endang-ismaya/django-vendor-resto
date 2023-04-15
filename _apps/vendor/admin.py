@@ -15,6 +15,7 @@ class VendorAdmin(admin.ModelAdmin):
         "user",
         "vendor_name",
     )
+    list_editable = ("is_approved",)
 
 
 admin.site.register(Vendor, VendorAdmin)

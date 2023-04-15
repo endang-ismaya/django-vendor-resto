@@ -1,0 +1,9 @@
+{% autoescape off %}
+  Hi {{ user.first_name }},
+  {% if is_approved %}
+    Congratulations! Your restaurant has been approved by our admin team. --foodonline
+  {% else %}
+    We're sorry! You're not eligible for publishing your food menu on our marketplace
+    Please contact support@endangismaya.com for further communication
+  {% endif %}
+{% endautoescape %}
