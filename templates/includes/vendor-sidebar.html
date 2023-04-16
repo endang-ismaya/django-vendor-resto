@@ -1,11 +1,11 @@
 <div class="user-account-nav user-account-sidebar">
   <div class="user-nav-list">
     <ul>
-      <li class="active">
+      <li class="{% if request.path == "/accounts/vendor-dashboard/" or request.path == "/accounts/vendor/" %} active {% endif %}">
         <a href="{% url 'accounts_vendor_dashboard' %}"><i class="icon-dashboard3"></i>Dashboard</a>
       </li>
-      <li>
-        <a href="restaurant-restaurant.html"><i class="icon-building"></i>My Restaurant</a>
+      <li class="{% if request.path == "/accounts/vendor/profile/" %} active {% endif %}">
+        <a href="{% url 'vendor_profile' %}"><i class="icon-building"></i>My Restaurant</a>
       </li>
       <li>
         <a href="restaurant-menu-builder.html"><i class="icon-menu5"></i>Menu Builder</a>

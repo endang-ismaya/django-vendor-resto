@@ -1,5 +1,5 @@
 {
     "indent": "2",
     "max_attribute_length": "500",
-    "ignore": "H021,H019"
+    "ignore": "H021,H019,H006"
 }
