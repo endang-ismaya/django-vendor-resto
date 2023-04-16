@@ -8,22 +8,22 @@
         <a href="{% url 'vendor_profile' %}"><i class="icon-building"></i>My Restaurant</a>
       </li>
       <li>
-        <a href="restaurant-menu-builder.html"><i class="icon-menu5"></i>Menu Builder</a>
+        <a href="{% url 'vendor_profile' %}"><i class="icon-menu5"></i>Menu Builder</a>
       </li>
       <li>
-        <a href="restaurant-orders.html"><i class="icon-add_shopping_cart"></i>Orders</a>
+        <a href="{% url 'vendor_profile' %}"><i class="icon-add_shopping_cart"></i>Orders</a>
       </li>
       <li>
-        <a href="restaurant-earnings.html"><i class="icon-money"></i>Earnings</a>
+        <a href="{% url 'vendor_profile' %}"><i class="icon-money"></i>Earnings</a>
       </li>
       <li>
-        <a href="restaurant-statement.html"><i class="icon-file-text22"></i>Statement</a>
+        <a href="{% url 'vendor_profile' %}"><i class="icon-file-text22"></i>Statement</a>
       </li>
       <li>
-        <a href="restaurant-change-password.html"><i class="icon-unlock-alt"></i>Change Password</a>
+        <a href="{% url 'vendor_profile' %}"><i class="icon-unlock-alt"></i>Change Password</a>
       </li>
       <li>
-        <a class="logout-btn" href="registration.html"><i class="icon-log-out"></i>Signout</a>
+        <a class="logout-btn" href="{% url 'accounts_logout' %}"><i class="icon-log-out"></i>Signout</a>
       </li>
     </ul>
   </div>

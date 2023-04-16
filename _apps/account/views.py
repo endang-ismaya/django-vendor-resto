@@ -17,7 +17,6 @@ from _apps.account.utils import (
     send_verification_email,
 )
 from _apps.vendor.forms import VendorRegistrationForm
-from _apps.vendor.models import Vendor
 
 logapp = logging.getLogger("app")
 
