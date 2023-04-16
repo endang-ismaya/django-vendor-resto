@@ -1,5 +1,6 @@
 import os
 import dotenv
+from datetime import date
 from pathlib import Path
 from django.utils.log import DEFAULT_LOGGING
 from django.contrib.messages import constants as messages
@@ -129,6 +130,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # LOGGING
+today = date.today().isoformat()
 LOGLEVEL = os.environ.get("LOGLEVEL", "info").upper()
 LOGGING = {
     "version": 1,
@@ -138,25 +140,17 @@ LOGGING = {
     # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
     "handlers": {
         "file": {
-            "class": "logging.handlers.TimedRotatingFileHandler",
             "level": "WARNING",
-            # "class": "logging.FileHandler",
-            "filename": BASE_DIR / "debug_logs/dailylog.log",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / f"debug_logs/{today}.log",
             "formatter": "default",
-            "when": "d",
-            "interval": 1,
-            "backupCount": 30,
             "encoding": "utf8",
         },
         "file_info": {
-            "class": "logging.handlers.TimedRotatingFileHandler",
             "level": "INFO",
-            # "class": "logging.FileHandler",
-            "filename": BASE_DIR / "debug_logs/dailylog.log",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / f"debug_logs/{today}.log",
             "formatter": "default",
-            "when": "d",
-            "interval": 1,
-            "backupCount": 30,
             "encoding": "utf8",
         },
         "console": {
