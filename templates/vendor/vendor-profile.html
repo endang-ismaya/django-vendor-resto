@@ -39,9 +39,10 @@
                                 </ul>
                               </div>
                               <div class="text-holder">
-                                <label>Update Logo</label>
+                                <label>Update Profile Picture</label>
                                 <div class="upload-gallery">{{ profile_form.profile_picture }}</div>
                               </div>
+                              <small class="text-danger">{{ profile_form.profile_picture.errors }}</small>
                             </div>
                           </div>
                           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -61,6 +62,7 @@
                                 <label>Update Cover Photo</label>
                                 <div class="upload-gallery">{{ profile_form.cover_photo }}</div>
                               </div>
+                              <small class="text-danger">{{ profile_form.cover_photo.errors }}</small>
                             </div>
                           </div>
                           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -80,6 +82,7 @@
                                 <label>Update License</label>
                                 <div class="upload-gallery">{{ vendor_form.vendor_license }}</div>
                               </div>
+                              <small class="text-danger">{{ vendor_form.vendor_license.errors }}</small>
                             </div>
                           </div>
                           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
