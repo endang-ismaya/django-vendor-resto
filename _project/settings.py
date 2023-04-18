@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # internal
     "_apps.account",
     "_apps.vendor",
+    "_apps.menu",
 ]
 
 MIDDLEWARE = [
