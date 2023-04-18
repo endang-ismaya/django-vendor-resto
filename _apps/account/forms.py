@@ -30,6 +30,11 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "Start typing...", "required": "required"}
+        )
+    )
     profile_picture = forms.FileField(
         widget=forms.FileInput(attrs={"class": "btn btn-info"}),
         validators=[allow_only_images_validator],
@@ -39,16 +44,29 @@ class UserProfileForm(forms.ModelForm):
         validators=[allow_only_images_validator],
     )
 
+    # latitude = forms.CharField(
+    #     widget=forms.TextInput(attrs={"readonly": "readonly", "class": "bg-secondary"}),
+    # )
+    # longitude = forms.CharField(
+    #     widget=forms.TextInput(attrs={"readonly": "readonly", "class": "bg-secondary"}),
+    # )
+
     class Meta:
         model = UserProfile
         fields = (
             "profile_picture",
             "cover_photo",
-            "address_line_1",
-            "address_line_2",
+            "address",
             "country",
             "city",
             "pin_code",
             "latitude",
             "longitude",
         )
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            if field == "latitude" or field == "longitude":
+                self.fields[field].widget.attrs["readonly"] = "readonly"
+                self.fields[field].widget.attrs["class"] = "bg-secondary"

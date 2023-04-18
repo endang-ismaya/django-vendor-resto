@@ -1,15 +1,18 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from _apps.account.forms import UserProfileForm
 from _apps.account.models import UserProfile
-from _apps.account.views import logapp
+from _apps.account.views import logapp, check_role_vendor
 
 
 from _apps.vendor.forms import VendorRegistrationForm
 from _apps.vendor.models import Vendor
 
 
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
 def vendor_profile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     vendor = get_object_or_404(Vendor, user=request.user)

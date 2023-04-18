@@ -20,6 +20,25 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("-date_joined",)
 
 
+class CustomUserProfile(admin.ModelAdmin):
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+    list_display = (
+        "user_email",
+        "user_role",
+        "address",
+    )
+    ordering = ("-created_at",)
+    exclude = ("password",)
+
+    def user_role(self, x):
+        return x.user.get_role()
+
+    def user_email(self, x):
+        return x.user.email
+
+
 # registration
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, CustomUserProfile)
