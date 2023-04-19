@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from _apps.account.forms import UserProfileForm
 from _apps.account.models import UserProfile
 from _apps.account.views import logapp, check_role_vendor
+from _apps.menu.models import Category
 
 
 from _apps.vendor.forms import VendorRegistrationForm
@@ -42,3 +43,13 @@ def vendor_profile(request):
         "vendor": vendor,
     }
     return render(request, "vendor/vendor-profile.html", context)
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def menu_builder(request):
+    vendor = Vendor.objects.get(user=request.user)
+    categories = Category.objects.filter(vendor=vendor)
+
+    context = {"categories": categories, "vendor": vendor}
+    return render(request, "vendor/menu-builder.html", context)
