@@ -18,4 +18,9 @@ urlpatterns = [
         views.edit_category,
         name="vendor__edit_category",
     ),
+    path(
+        "menu-builder/category/delete/<int:pk>/",
+        views.delete_category,
+        name="vendor__delete_category",
+    ),
 ]

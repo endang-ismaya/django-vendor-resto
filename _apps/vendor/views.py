@@ -125,3 +125,12 @@ def edit_category(request, pk=None):
 
     context = {"form": form, "category": category}
     return render(request, "vendor/edit-category.html", context)
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def delete_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+    category.delete()
+    messages.success(request, "Category deleted successfully")
+    return redirect("vendor__menu_builder")
