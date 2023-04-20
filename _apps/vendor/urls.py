@@ -13,4 +13,9 @@ urlpatterns = [
     ),
     # category crud
     path("menu-builder/category/add/", views.add_category, name="vendor__add_category"),
+    path(
+        "menu-builder/category/edit/<int:pk>/",
+        views.edit_category,
+        name="vendor__edit_category",
+    ),
 ]

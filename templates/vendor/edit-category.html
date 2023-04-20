@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+<!-- load static-->
+{% load static %}
+<!-- content start -->
+{% block content %}
+  <!-- Main Section Start -->
+  <div class="main-section">
+    <!-- cover -->
+    {% include "includes/cover-resto.html" %}
+    <div class="page-section account-header buyer-logged-in">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <!-- load side bar-->
+            {% include "includes/vendor-sidebar.html" %}
+          </div>
+          <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <div class="user-dashboard loader-holder">
+              <div class="user-holder">
+                <h5 class="text-uppercase">Build Your Food Menu</h5>
+                <hr>
+                <h6>Edit Category</h6>
+                <!-- render form -->
+                <form action="{% url 'vendor__edit_category' category.id %}" method="post">
+                  {% csrf_token %}
+                  <div class="form-fields-set">
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="field-holder">
+                          <label for="category_name">Category Name*</label>
+                          {{ form.category_name }}
+                        </div>
+                      </div>
+                      <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="field-holder">
+                          <label for="description">Description</label>
+                          {{ form.description }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-outline-info">
+                    <i class="fa fa-plus"></i> Update
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Main Section End -->
+  <!-- content end -->
+{% endblock content %}

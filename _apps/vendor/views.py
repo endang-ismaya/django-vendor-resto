@@ -6,17 +6,13 @@ from django.template.defaultfilters import slugify
 from _apps.account.forms import UserProfileForm
 from _apps.account.models import UserProfile
 from _apps.account.views import logapp, check_role_vendor
+from _apps.account.context_processors import get_vendor_instance
+
 from _apps.menu.forms import CategoryForm
 from _apps.menu.models import Category, FoodItem
 
-
 from _apps.vendor.forms import VendorRegistrationForm
 from _apps.vendor.models import Vendor
-
-
-def get_vendor(request):
-    vendor = Vendor.objects.get(user=request.user)
-    return vendor
 
 
 @login_required(login_url="accounts_login")
@@ -55,8 +51,8 @@ def vendor_profile(request):
 @login_required(login_url="accounts_login")
 @user_passes_test(check_role_vendor)
 def menu_builder(request):
-    vendor = get_vendor(request)
-    categories = Category.objects.filter(vendor=vendor)
+    vendor = get_vendor_instance(request)
+    categories = Category.objects.filter(vendor=vendor).order_by("-created_at")
 
     context = {"categories": categories, "vendor": vendor}
     return render(request, "vendor/menu-builder.html", context)
@@ -65,7 +61,7 @@ def menu_builder(request):
 @login_required(login_url="accounts_login")
 @user_passes_test(check_role_vendor)
 def fooditems_by_category(request, pk=None):
-    vendor = get_vendor(request)
+    vendor = get_vendor_instance(request)
     category = get_object_or_404(Category, pk=pk)
 
     fooditems = FoodItem.objects.filter(vendor=vendor, category=category)
@@ -82,7 +78,7 @@ def add_category(request):
         if form.is_valid():
             category_name = form.cleaned_data["category_name"]
             category = form.save(commit=False)
-            category.vendor = get_vendor(request)
+            category.vendor = get_vendor_instance(request)
             category.slug = slugify(category_name)
             category.save()
             messages.success(request, "Category has been added successfully")
@@ -99,3 +95,33 @@ def add_category(request):
 
     context = {"form": form}
     return render(request, "vendor/add-category.html", context)
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def edit_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+
+        if form.is_valid():
+            category_name = form.cleaned_data["category_name"]
+            category = form.save(commit=False)
+            category.vendor = get_vendor_instance(request)
+            category.slug = slugify(category_name)
+            category.save()
+            messages.success(request, "Category updated successfully")
+            return redirect("vendor__menu_builder")
+        else:
+            logapp.error(form.errors)
+            error = form.errors
+            a = list(error.as_data()["category_name"][0])
+            error_message = a[0]
+            messages.error(request, error_message)
+            return redirect("vendor__menu_builder")
+    else:
+        form = CategoryForm(instance=category)
+
+    context = {"form": form, "category": category}
+    return render(request, "vendor/edit-category.html", context)

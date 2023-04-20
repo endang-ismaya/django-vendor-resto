@@ -8,3 +8,12 @@ def get_vendor(request):
         vendor = None
 
     return dict(vendor=vendor)
+
+
+def get_vendor_instance(request):
+    try:
+        vendor = Vendor.objects.get(user=request.user)
+    except Exception:
+        vendor = None
+
+    return vendor
