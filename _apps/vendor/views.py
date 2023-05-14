@@ -194,3 +194,12 @@ def edit_fooditems(request, pk=None):
 
     context = {"form": form, "food": food}
     return render(request, "vendor/edit-food.html", context)
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def delete_fooditems(request, pk=None):
+    food = get_object_or_404(FoodItem, pk=pk)
+    food.delete()
+    messages.success(request, "Food Item deleted successfully")
+    return redirect("vendor__menu_builder")

@@ -34,9 +34,9 @@ urlpatterns = [
         views.edit_fooditems,
         name="vendor__edit_fooditems",
     ),
-    # path(
-    #     "menu-builder/fooditems/delete/<int:pk>/",
-    #     views.delete_fooditems,
-    #     name="vendor__delete_fooditems",
-    # ),
+    path(
+        "menu-builder/fooditems/delete/<int:pk>/",
+        views.delete_fooditems,
+        name="vendor__delete_fooditems",
+    ),
 ]
