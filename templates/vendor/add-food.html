@@ -24,9 +24,9 @@
                 <br>
                 <br>
                 <hr>
-                <h6>Edit Category</h6>
+                <h6>Add New Food Item</h6>
                 <!-- render form -->
-                <form action="{% url 'vendor__edit_category' category.id %}" method="post">
+                <form action="{% url 'vendor__add_fooditems' %}" method="post">
                   {% csrf_token %}
                   <div class="form-fields-set">
                     <div class="row">
@@ -45,7 +45,7 @@
                     </div>
                   </div>
                   <button type="submit" class="btn btn-outline-info">
-                    <i class="fa fa-plus"></i> Update
+                    <i class="fa fa-plus"></i> Add Category
                   </button>
                 </form>
               </div>

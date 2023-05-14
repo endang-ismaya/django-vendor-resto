@@ -134,3 +134,31 @@ def delete_category(request, pk=None):
     category.delete()
     messages.success(request, "Category deleted successfully")
     return redirect("vendor__menu_builder")
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def add_fooditems(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+
+        if form.is_valid():
+            category_name = form.cleaned_data["category_name"]
+            category = form.save(commit=False)
+            category.vendor = get_vendor_instance(request)
+            category.slug = slugify(category_name)
+            category.save()
+            messages.success(request, "Category has been added successfully")
+            return redirect("vendor__menu_builder")
+        else:
+            logapp.error(form.errors)
+            error = form.errors
+            a = list(error.as_data()["category_name"][0])
+            error_message = a[0]
+            messages.error(request, error_message)
+            return redirect("vendor__menu_builder")
+    else:
+        form = CategoryForm()
+
+    context = {"form": form}
+    return render(request, "vendor/add-category.html", context)
