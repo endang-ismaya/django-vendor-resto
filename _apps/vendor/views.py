@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from _apps.account.forms import UserProfileForm
 from _apps.account.models import UserProfile
 from _apps.account.views import logapp, check_role_vendor
-from _apps.account.context_processors import get_vendor, get_vendor_instance
+from _apps.account.context_processors import get_vendor_instance
 
 from _apps.menu.forms import CategoryForm, FoodItemForm
 from _apps.menu.models import Category, FoodItem
@@ -157,9 +157,40 @@ def add_fooditems(request):
             # print(a)
             error_message = a[0]
             messages.error(request, error_message)
-            # return redirect("vendor__menu_builder")
+            return redirect("vendor__menu_builder")
     else:
         form = FoodItemForm()
 
     context = {"form": form}
     return render(request, "vendor/add-food.html", context)
+
+
+@login_required(login_url="accounts_login")
+@user_passes_test(check_role_vendor)
+def edit_fooditems(request, pk=None):
+    food = get_object_or_404(FoodItem, pk=pk)
+
+    if request.method == "POST":
+        form = FoodItemForm(request.POST, instance=food)
+
+        if form.is_valid():
+            food_title = form.cleaned_data["food_title"]
+            food = form.save(commit=False)
+            food.vendor = get_vendor_instance(request)
+            food.slug = slugify(food_title)
+            food.save()
+            messages.success(request, "FoodItem updated successfully")
+            return redirect("vendor__fooditems_by_category", food.category.id)
+        else:
+            logapp.error(form.errors)
+            error = form.errors
+            a = list(error.as_data())
+            # print(a)
+            error_message = a[0]
+            messages.error(request, error_message)
+            return redirect("vendor__menu_builder")
+    else:
+        form = FoodItemForm(instance=food)
+
+    context = {"form": form, "food": food}
+    return render(request, "vendor/edit-food.html", context)
