@@ -43,6 +43,13 @@
                             </a>
                           </td>
                           <td>
+                            {% if food.is_available %}
+                              <span class="badge badge-success">Available</span>
+                            {% else %}
+                              <span class="badge badge-danger">Not Available</span>
+                            {% endif %}
+                          </td>
+                          <td>
                             <a href="{% url 'vendor__edit_fooditems' food.id %}" style="color:unset;"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                             &nbsp;
                             <a href="{% url 'vendor__delete_fooditems' food.id %}" onclick="return confirm('Are you sure you want to delete this Food?')"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
