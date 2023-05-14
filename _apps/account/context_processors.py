@@ -7,6 +7,8 @@ def get_vendor(request):
     except Exception:
         vendor = None
 
+    print(vendor)
+
     return dict(vendor=vendor)
 
 

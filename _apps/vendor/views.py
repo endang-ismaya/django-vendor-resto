@@ -6,9 +6,9 @@ from django.template.defaultfilters import slugify
 from _apps.account.forms import UserProfileForm
 from _apps.account.models import UserProfile
 from _apps.account.views import logapp, check_role_vendor
-from _apps.account.context_processors import get_vendor_instance
+from _apps.account.context_processors import get_vendor, get_vendor_instance
 
-from _apps.menu.forms import CategoryForm
+from _apps.menu.forms import CategoryForm, FoodItemForm
 from _apps.menu.models import Category, FoodItem
 
 from _apps.vendor.forms import VendorRegistrationForm
@@ -140,25 +140,26 @@ def delete_category(request, pk=None):
 @user_passes_test(check_role_vendor)
 def add_fooditems(request):
     if request.method == "POST":
-        form = CategoryForm(request.POST)
+        form = FoodItemForm(request.POST, request.FILES)
 
         if form.is_valid():
-            category_name = form.cleaned_data["category_name"]
-            category = form.save(commit=False)
-            category.vendor = get_vendor_instance(request)
-            category.slug = slugify(category_name)
-            category.save()
-            messages.success(request, "Category has been added successfully")
-            return redirect("vendor__menu_builder")
+            food_title = form.cleaned_data["food_title"]
+            food = form.save(commit=False)
+            food.vendor = get_vendor_instance(request)
+            food.slug = slugify(food_title)
+            form.save()
+            messages.success(request, "Food Item has been added successfully")
+            return redirect("vendor__fooditems_by_category", food.category.id)
         else:
             logapp.error(form.errors)
             error = form.errors
-            a = list(error.as_data()["category_name"][0])
+            a = list(error.as_data())
+            # print(a)
             error_message = a[0]
             messages.error(request, error_message)
-            return redirect("vendor__menu_builder")
+            # return redirect("vendor__menu_builder")
     else:
-        form = CategoryForm()
+        form = FoodItemForm()
 
     context = {"form": form}
-    return render(request, "vendor/add-category.html", context)
+    return render(request, "vendor/add-food.html", context)
