@@ -160,6 +160,9 @@ def add_fooditems(request):
             return redirect("vendor__menu_builder")
     else:
         form = FoodItemForm()
+        form.fields["category"].queryset = Category.objects.filter(
+            vendor=get_vendor_instance(request)
+        )
 
     context = {"form": form}
     return render(request, "vendor/add-food.html", context)
@@ -191,6 +194,9 @@ def edit_fooditems(request, pk=None):
             return redirect("vendor__menu_builder")
     else:
         form = FoodItemForm(instance=food)
+        form.fields["category"].queryset = Category.objects.filter(
+            vendor=get_vendor_instance(request)
+        )
 
     context = {"form": form, "food": food}
     return render(request, "vendor/edit-food.html", context)
